@@ -48,12 +48,44 @@
   <ItemGroup>
     <Compile Include="Config\csConexion.cs" />
     <Compile Include="Controlador\cllVentas.cs" />
+    <Compile Include="Controlador\cllInventario.cs" />
+    <Compile Include="Controlador\cllReparaciones.cs" />
+    <Compile Include="Controlador\cllProducto.cs" />
+    <Compile Include="Controlador\cllClientes.cs" />
     <Compile Include="Modelo\csVentas.cs" />
+    <Compile Include="Modelo\csProducto.cs" />
+    <Compile Include="Modelo\csProductoDAO.cs" />
+    <Compile Include="Modelo\csReparacion.cs" />
+    <Compile Include="Modelo\csReparacionDAO.cs" />
     <Compile Include="Vista\frmMenuPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Vista\frmMenuPrincipal.Designer.cs">
       <DependentUpon>frmMenuPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\frmInventario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmInventario.Designer.cs">
+      <DependentUpon>frmInventario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\frmReparaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmReparaciones.Designer.cs">
+      <DependentUpon>frmReparaciones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\frmVentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmVentas.Designer.cs">
+      <DependentUpon>frmVentas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\frmGestionVentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmGestionVentas.Designer.cs">
+      <DependentUpon>frmGestionVentas.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
