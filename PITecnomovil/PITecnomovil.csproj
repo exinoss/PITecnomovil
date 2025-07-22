@@ -33,8 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MaterialSkin, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialSkin.2.2.3.1\lib\net461\MaterialSkin.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,17 +53,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\csConexion.cs" />
-    <Compile Include="Controlador\cllVentas.cs" />
-    <Compile Include="Controlador\cllInventario.cs" />
-    <Compile Include="Controlador\cllReparaciones.cs" />
-    <Compile Include="Controlador\cllProducto.cs" />
-    <Compile Include="Controlador\cllClientes.cs" />
-    <Compile Include="Modelo\csVentas.cs" />
-    <Compile Include="Modelo\csProducto.cs" />
-    <Compile Include="Modelo\csProductoDAO.cs" />
-    <Compile Include="Modelo\csReparacion.cs" />
-    <Compile Include="Modelo\csReparacionDAO.cs" />
+    <Compile Include="Modelo\Cliente.cs" />
+    <Compile Include="Modelo\LoginRequest.cs" />
+    <Compile Include="Modelo\LoginResponse.cs" />
+    <Compile Include="Modelo\Usuario.cs" />
+    <Compile Include="Modelo\Venta.cs" />
+    <Compile Include="Modelo\VentaProducto.cs" />
+    <Compile Include="Modelo\Producto.cs" />
+    <Compile Include="Modelo\Reparacion.cs" />
+    <Compile Include="Modelo\VentaReparacion.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Servicios\AuthService.cs" />
+    <Compile Include="Servicios\ClienteService.cs" />
+    <Compile Include="Servicios\IAuthService.cs" />
+    <Compile Include="Servicios\IClienteService.cs" />
+    <Compile Include="Servicios\IProductoService.cs" />
+    <Compile Include="Servicios\ProductoService.cs" />
+    <Compile Include="Vista\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Vista\frmMenuPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +90,12 @@
     </Compile>
     <Compile Include="Vista\frmInventario.Designer.cs">
       <DependentUpon>frmInventario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\frmProductos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmProductos.Designer.cs">
+      <DependentUpon>frmProductos.cs</DependentUpon>
     </Compile>
     <Compile Include="Vista\frmReparaciones.cs">
       <SubType>Form</SubType>
@@ -91,13 +119,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <EmbeddedResource Include="Vista\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmMenuPrincipal.resx">
+      <DependentUpon>frmMenuPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmProductos.resx">
+      <DependentUpon>frmProductos.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,7 +146,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Recursos\" />
+    <Folder Include="Config\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\API RESTful\API RESTful.csproj">
+      <Project>{31af6607-2f75-4680-b711-be5a6a641176}</Project>
+      <Name>API RESTful</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ojo_off.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ojooff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ojoon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
