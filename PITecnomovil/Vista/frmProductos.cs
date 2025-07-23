@@ -48,6 +48,7 @@ namespace PITecnomovil.Vista
             _selectedProductId = null;
             _RegistrarActualizar = true;
             btnGuardar.Text = "Guardar";
+            LoadProductos();
         }
         private void frmProductos_Load(object sender, EventArgs e)
         {
