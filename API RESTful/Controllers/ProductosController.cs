@@ -65,8 +65,11 @@ namespace API_RESTful.Controllers
         [Route("{id:int}")]
         public IHttpActionResult Put(int id, Producto producto)
         {
-            if (!ModelState.IsValid || id != producto.IdProducto)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            producto.IdProducto = id;
+
 
             var existingProducto = _context.Productos.Find(id);
             if (existingProducto == null)
