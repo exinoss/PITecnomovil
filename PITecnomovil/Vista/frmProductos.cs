@@ -181,5 +181,10 @@ namespace PITecnomovil.Vista
         {
             Clean();
         }
+
+        private void dataGridViewProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
