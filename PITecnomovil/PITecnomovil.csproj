@@ -136,6 +136,9 @@
     <EmbeddedResource Include="Vista\frmProductos.resx">
       <DependentUpon>frmProductos.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmReparaciones.resx">
+      <DependentUpon>frmReparaciones.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

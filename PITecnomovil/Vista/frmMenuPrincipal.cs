@@ -25,7 +25,7 @@ namespace PITecnomovil
 
 
 
-            frmInventario formulario2 = new frmInventario();
+            frmProductos formulario2 = new frmProductos();
             formulario2.Dock = DockStyle.Fill; 
             materialTabControl1.TabPages[0].Controls.Add(formulario2);
         }

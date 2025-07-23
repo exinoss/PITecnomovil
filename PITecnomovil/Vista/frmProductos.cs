@@ -26,6 +26,9 @@ namespace PITecnomovil.Vista
             _productoService = new ProductoService();
             LoadProductos();
             _RegistrarActualizar = true;
+            this.TopLevel = false;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Visible = true;
         }
         private async void LoadProductos()
         {
@@ -97,6 +100,30 @@ namespace PITecnomovil.Vista
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
+           
+        }
+        private bool ConfirmarAccion(string mensaje)
+        {
+            return MessageBox.Show(mensaje, "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                   == DialogResult.Yes;
+        }
+        private async void btnEliminar_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void dataGridViewProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private async void btnGuardar_Click_1(object sender, EventArgs e)
+        {
             string nameTypeError = "";
             try
             {
@@ -151,12 +178,8 @@ namespace PITecnomovil.Vista
                 MessageBox.Show($"Error al {nameTypeError}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private bool ConfirmarAccion(string mensaje)
-        {
-            return MessageBox.Show(mensaje, "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                   == DialogResult.Yes;
-        }
-        private async void btnEliminar_Click(object sender, EventArgs e)
+
+        private async void btnEliminar_Click_1(object sender, EventArgs e)
         {
             try
             {
@@ -177,14 +200,9 @@ namespace PITecnomovil.Vista
             }
         }
 
-        private void btnNuevo_Click(object sender, EventArgs e)
+        private void btnNuevo_Click_1(object sender, EventArgs e)
         {
             Clean();
-        }
-
-        private void dataGridViewProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }
