@@ -22,11 +22,16 @@ namespace PITecnomovil
         {
             InitializeComponent();
             _rol = rol;
+
+
+
+            frmInventario formulario2 = new frmInventario();
+            formulario2.Dock = DockStyle.Fill; 
+            materialTabControl1.TabPages[0].Controls.Add(formulario2);
         }
         
         private void frmMenuPrincipal_Load(object sender, EventArgs e)
         {
-            textBox1.Text = _rol; 
         }
         private void frmMenuPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {

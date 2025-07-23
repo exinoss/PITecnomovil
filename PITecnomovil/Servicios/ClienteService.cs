@@ -56,5 +56,13 @@ namespace PITecnomovil.Servicios
             var response = await _httpClient.DeleteAsync($"api/clientes/{id}");
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task<List<Cliente>> SearchProductosAsync(string nombre)
+        {
+            var response = await _httpClient.GetAsync($"api/clientes/search?nombre={Uri.EscapeDataString(nombre ?? "")}");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<Cliente>>(json);
+        }
     }
 }

@@ -81,5 +81,16 @@ namespace API_RESTful.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        //GET api/<controller>/search?nombre=
+        [HttpGet]
+        [Route("search")]
+        public IHttpActionResult Search(string nombre)
+        {
+            var nombres = _context.Clientes
+                .Where(p => p.Nombres.Contains(nombre ?? ""))
+                .ToList();
+            return Ok(nombres);
+        }
     }
 }

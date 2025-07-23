@@ -14,5 +14,6 @@ namespace PITecnomovil.Servicios
         Task<Cliente> GetClienteAsync(int id);
         Task UpdateClienteAsync(int id, Cliente cliente);
         Task DeleteClienteAsync(int id);
+        
     }
 }

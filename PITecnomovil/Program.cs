@@ -17,7 +17,7 @@ namespace PITecnomovil
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmProductos());
+            Application.Run(new frmMenuPrincipal("ADMIN"));
         }
     }
 }
