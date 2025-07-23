@@ -45,7 +45,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.textBox1);
             this.Name = "frmMenuPrincipal";
-            this.Text = "Form1";
+            this.Text = "Menu Principal";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuPrincipal_FormClosing);
             this.Load += new System.EventHandler(this.frmMenuPrincipal_Load);
             this.ResumeLayout(false);

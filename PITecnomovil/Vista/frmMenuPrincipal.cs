@@ -1,4 +1,5 @@
-﻿using PITecnomovil.Modelo;
+﻿using MaterialSkin.Controls;
+using PITecnomovil.Modelo;
 using PITecnomovil.Servicios;
 using PITecnomovil.Vista;
 using System;
@@ -14,7 +15,7 @@ using System.Windows.Forms;
 
 namespace PITecnomovil
 {
-    public partial class frmMenuPrincipal : Form
+    public partial class frmMenuPrincipal : MaterialForm
     {
         private string _rol;
         public frmMenuPrincipal(string rol)
