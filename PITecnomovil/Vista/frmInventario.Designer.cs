@@ -40,7 +40,7 @@ namespace PITecnomovil
             this.materialCard1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard1.Name = "materialCard1";
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard1.Size = new System.Drawing.Size(786, 201);
+            this.materialCard1.Size = new System.Drawing.Size(794, 201);
             this.materialCard1.TabIndex = 0;
             this.materialCard1.Paint += new System.Windows.Forms.PaintEventHandler(this.materialCard1_Paint);
             // 
@@ -50,10 +50,10 @@ namespace PITecnomovil
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 207);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 211);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(786, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(794, 172);
             this.dataGridView1.TabIndex = 0;
             // 
             // materialButton1
@@ -121,7 +121,7 @@ namespace PITecnomovil
             this.materialTextBox3.MouseState = MaterialSkin.MouseState.OUT;
             this.materialTextBox3.Multiline = false;
             this.materialTextBox3.Name = "materialTextBox3";
-            this.materialTextBox3.Size = new System.Drawing.Size(275, 50);
+            this.materialTextBox3.Size = new System.Drawing.Size(205, 50);
             this.materialTextBox3.TabIndex = 4;
             this.materialTextBox3.Text = "";
             this.materialTextBox3.TrailingIcon = null;
@@ -130,7 +130,7 @@ namespace PITecnomovil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(786, 357);
+            this.ClientSize = new System.Drawing.Size(794, 383);
             this.Controls.Add(this.materialCard1);
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

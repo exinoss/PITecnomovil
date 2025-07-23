@@ -1,4 +1,6 @@
-﻿using System;
+﻿using API_RESTful.Data;
+using API_RESTful.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,33 +9,82 @@ using System.Web.Http;
 
 namespace API_RESTful.Controllers
 {
+    [RoutePrefix("api/usuarios")]
     public class UsuariosController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        private readonly TecnomovilContext _context;
+
+        public UsuariosController()
         {
-            return new string[] { "value1", "value2" };
+            _context = new TecnomovilContext();
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        // GET api/usuarios
+        [HttpGet, Route("")]
+        public IEnumerable<Usuario> Get()
         {
-            return "value";
+            return _context.Usuarios.ToList();
         }
 
-        // POST api/<controller>
-        public void Post([FromBody] string value)
+        // GET api/usuarios/5
+        [HttpGet, Route("{id:int}", Name = "GetUsuarioById")]
+        public IHttpActionResult Get(int id)
         {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+            return Ok(usuario);
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody] string value)
+        // POST api/usuarios
+        [HttpPost, Route("")]
+        public IHttpActionResult Post(Usuario usuario)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
+
+            return CreatedAtRoute(
+                "GetUsuarioById",
+                new { id = usuario.IdUsuario },
+                usuario
+            );
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
+        // PUT api/usuarios/5
+        [HttpPut, Route("{id:int}")]
+        public IHttpActionResult Put(int id, Usuario usuario)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            usuario.IdUsuario = id;
+            var existing = _context.Usuarios.Find(id);
+            if (existing == null)
+                return NotFound();
+
+            existing.NombreUsuario = usuario.NombreUsuario;
+            existing.Clave = usuario.Clave;
+            existing.Rol = usuario.Rol;
+            _context.SaveChanges();
+
+            return Ok(existing);
+        }
+
+        // DELETE api/usuarios/5
+        [HttpDelete, Route("{id:int}")]
+        public IHttpActionResult Delete(int id)
+        {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
+
+            return Ok();
         }
     }
 }

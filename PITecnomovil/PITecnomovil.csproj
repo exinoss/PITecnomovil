@@ -72,7 +72,9 @@
     <Compile Include="Servicios\IAuthService.cs" />
     <Compile Include="Servicios\IClienteService.cs" />
     <Compile Include="Servicios\IProductoService.cs" />
+    <Compile Include="Servicios\IUsuarioService.cs" />
     <Compile Include="Servicios\ProductoService.cs" />
+    <Compile Include="Servicios\UsuarioService.cs" />
     <Compile Include="Vista\frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
