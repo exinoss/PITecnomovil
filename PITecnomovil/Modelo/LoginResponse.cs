@@ -8,6 +8,7 @@ namespace PITecnomovil.Modelo
 {
     internal class LoginResponse
     {
+        public int IdUsuario { get; set; }
         public string Message { get; set; }
         public string Rol { get; set; }
     }

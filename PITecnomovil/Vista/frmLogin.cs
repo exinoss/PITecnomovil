@@ -72,7 +72,7 @@ namespace PITecnomovil.Vista
                     MessageBox.Show(result.Message, "Bienvenido", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
-                    var menu = new frmMenuPrincipal(result.Rol);
+                    var menu = new frmMenuPrincipal(result.Rol,result.IdUsuario);
                     menu.Show();
                 }
                 else

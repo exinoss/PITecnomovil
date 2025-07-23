@@ -72,9 +72,23 @@
     <Compile Include="Servicios\IAuthService.cs" />
     <Compile Include="Servicios\IClienteService.cs" />
     <Compile Include="Servicios\IProductoService.cs" />
+    <Compile Include="Servicios\IReparacionService.cs" />
     <Compile Include="Servicios\IUsuarioService.cs" />
+    <Compile Include="Servicios\IVentaProductoService.cs" />
+    <Compile Include="Servicios\IVentaReparacionService.cs" />
+    <Compile Include="Servicios\IVentaService.cs" />
     <Compile Include="Servicios\ProductoService.cs" />
+    <Compile Include="Servicios\ReparacionService.cs" />
     <Compile Include="Servicios\UsuarioService.cs" />
+    <Compile Include="Servicios\VentaProductoService.cs" />
+    <Compile Include="Servicios\VentaReparacionService.cs" />
+    <Compile Include="Servicios\VentaService.cs" />
+    <Compile Include="Vista\frmClientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmClientes.Designer.cs">
+      <DependentUpon>frmClientes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Vista\frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,12 +100,6 @@
     </Compile>
     <Compile Include="Vista\frmMenuPrincipal.Designer.cs">
       <DependentUpon>frmMenuPrincipal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Vista\frmInventario.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Vista\frmInventario.Designer.cs">
-      <DependentUpon>frmInventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Vista\frmProductos.cs">
       <SubType>Form</SubType>
@@ -105,17 +113,17 @@
     <Compile Include="Vista\frmReparaciones.Designer.cs">
       <DependentUpon>frmReparaciones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Vista\frmUsuarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmUsuarios.Designer.cs">
+      <DependentUpon>frmUsuarios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Vista\frmVentas.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Vista\frmVentas.Designer.cs">
       <DependentUpon>frmVentas.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Vista\frmGestionVentas.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Vista\frmGestionVentas.Designer.cs">
-      <DependentUpon>frmGestionVentas.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -124,8 +132,8 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Vista\frmInventario.resx">
-      <DependentUpon>frmInventario.cs</DependentUpon>
+    <EmbeddedResource Include="Vista\frmClientes.resx">
+      <DependentUpon>frmClientes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
@@ -138,6 +146,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmReparaciones.resx">
       <DependentUpon>frmReparaciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmUsuarios.resx">
+      <DependentUpon>frmUsuarios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmVentas.resx">
+      <DependentUpon>frmVentas.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -170,6 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ojoon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EnConstruccion.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Limpiar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

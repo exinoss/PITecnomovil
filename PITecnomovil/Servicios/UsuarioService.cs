@@ -3,6 +3,7 @@ using PITecnomovil.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,11 @@ namespace PITecnomovil.Servicios
                 "application/json"
             );
             var resp = await _httpClient.PostAsync("api/usuarios", content);
+            if (resp.StatusCode == HttpStatusCode.Conflict)
+            {
+                var error = await resp.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(error);
+            }
             resp.EnsureSuccessStatusCode();
         }
 
@@ -57,6 +63,12 @@ namespace PITecnomovil.Servicios
                 "application/json"
             );
             var resp = await _httpClient.PutAsync($"api/usuarios/{id}", content);
+            if (resp.StatusCode == HttpStatusCode.Conflict)
+            {
+                var error = await resp.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(error);
+            }
+
             resp.EnsureSuccessStatusCode();
         }
 

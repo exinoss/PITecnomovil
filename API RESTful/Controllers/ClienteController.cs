@@ -2,6 +2,8 @@
 using API_RESTful.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -44,7 +46,21 @@ namespace API_RESTful.Controllers
                 return BadRequest(ModelState);
 
             _context.Clientes.Add(cliente);
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlEx = ex.InnerException?.InnerException as SqlException;
+                if (sqlEx != null && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    // Violación de índice único en Cedula
+                    return Content(HttpStatusCode.Conflict,
+                                   "La cédula ya está registrada en otro cliente.");
+                }
+                throw; // no sabemos qué fue, relanzar
+            }
             return CreatedAtRoute("DefaultApi", new { controller = "clientes", id = cliente.IdCliente }, cliente);
         }
 
@@ -55,8 +71,8 @@ namespace API_RESTful.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (id != cliente.IdCliente)
-                return BadRequest("El ID en la URL no coincide con el ID del cliente.");
+            cliente.IdCliente = id;
+
 
             var existingCliente = _context.Clientes.Find(id);
             if (existingCliente == null)
@@ -65,7 +81,20 @@ namespace API_RESTful.Controllers
             existingCliente.Nombres = cliente.Nombres;
             existingCliente.Cedula = cliente.Cedula;
             existingCliente.Contacto = cliente.Contacto;
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlEx = ex.InnerException?.InnerException as SqlException;
+                if (sqlEx != null && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return Content(HttpStatusCode.Conflict,
+                                   "La cédula ya está registrada en otro cliente.");
+                }
+                throw;
+            }
             return Ok(existingCliente);
         }
 

@@ -2,6 +2,8 @@
 using API_RESTful.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -44,7 +46,21 @@ namespace API_RESTful.Controllers
                 return BadRequest(ModelState);
 
             _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlEx = ex.InnerException?.InnerException as SqlException;
+                if (sqlEx != null && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    // Violación de índice único en Cedula
+                    return Content(HttpStatusCode.Conflict,
+                                   "El nombre de usuario ya está registrada en otro usuario.");
+                }
+                throw; // no sabemos qué fue, relanzar
+            }
 
             return CreatedAtRoute(
                 "GetUsuarioById",
@@ -68,7 +84,21 @@ namespace API_RESTful.Controllers
             existing.NombreUsuario = usuario.NombreUsuario;
             existing.Clave = usuario.Clave;
             existing.Rol = usuario.Rol;
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var sqlEx = ex.InnerException?.InnerException as SqlException;
+                if (sqlEx != null && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    // Violación de índice único en Cedula
+                    return Content(HttpStatusCode.Conflict,
+                                   "El nombre de usuario ya está registrada en otro usuario.");
+                }
+                throw; // no sabemos qué fue, relanzar
+            }
 
             return Ok(existing);
         }

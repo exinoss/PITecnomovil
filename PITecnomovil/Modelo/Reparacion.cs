@@ -14,6 +14,8 @@ namespace PITecnomovil.Modelo
         public string Observaciones { get; set; }
         public string Dispositivo { get; set; }
         public decimal PrecioServicio { get; set; }
+        public Cliente Cliente { get; set; }
+        public Usuario Usuario { get; set; }
 
         public bool IsValid()
         {

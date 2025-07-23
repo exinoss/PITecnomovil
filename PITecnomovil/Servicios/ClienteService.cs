@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using PITecnomovil.Modelo;
+using System.Net;
 
 namespace PITecnomovil.Servicios
 {
@@ -32,6 +33,13 @@ namespace PITecnomovil.Servicios
             var json = JsonConvert.SerializeObject(cliente);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("api/clientes", content);
+
+            if (response.StatusCode == HttpStatusCode.Conflict)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(error);
+            }
+
             response.EnsureSuccessStatusCode();
         }
 
@@ -48,6 +56,12 @@ namespace PITecnomovil.Servicios
             var json = JsonConvert.SerializeObject(cliente);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync($"api/clientes/{id}", content);
+
+            if (response.StatusCode == HttpStatusCode.Conflict)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(error);
+            }
             response.EnsureSuccessStatusCode();
         }
 

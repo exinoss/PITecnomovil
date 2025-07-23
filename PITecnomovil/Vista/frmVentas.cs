@@ -5,9 +5,15 @@ namespace PITecnomovil
 {
     public partial class frmVentas : Form
     {
-        public frmVentas()
+        private readonly int _idUsuario;
+        public frmVentas(int idUsuario)
         {
             InitializeComponent();
+
+            _idUsuario = idUsuario;
+            this.TopLevel = false;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Visible = true;
         }
     }
 }
