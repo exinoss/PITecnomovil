@@ -74,6 +74,8 @@ namespace API_RESTful.Controllers
 
             existingProducto.Nombre = producto.Nombre;
             existingProducto.Precio = producto.Precio;
+            existingProducto.Descripcion = producto.Descripcion;
+            existingProducto.Stock = producto.Stock;
             _context.SaveChanges();
             return Ok(existingProducto);
         }
