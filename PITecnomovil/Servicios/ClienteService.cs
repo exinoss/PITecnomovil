@@ -19,7 +19,7 @@ namespace PITecnomovil.Servicios
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("https://localhost:44349/"); 
         }
-
+        
         public async Task<List<Cliente>> GetClientesAsync()
         {
             var response = await _httpClient.GetAsync("api/clientes");

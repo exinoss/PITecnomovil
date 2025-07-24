@@ -188,6 +188,10 @@
     <Compile Include="Migrations\202507222132227_AddNewTablasWithRelaciones.Designer.cs">
       <DependentUpon>202507222132227_AddNewTablasWithRelaciones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202507240433225_RestrinccionCedula.cs" />
+    <Compile Include="Migrations\202507240433225_RestrinccionCedula.Designer.cs">
+      <DependentUpon>202507240433225_RestrinccionCedula.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Producto.cs" />
@@ -347,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202507222132227_AddNewTablasWithRelaciones.resx">
       <DependentUpon>202507222132227_AddNewTablasWithRelaciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202507240433225_RestrinccionCedula.resx">
+      <DependentUpon>202507240433225_RestrinccionCedula.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,7 +17,7 @@ namespace API_RESTful.Models
         public string Nombres { get; set; }
 
         [Required(ErrorMessage = "La cédula es obligatoria.")]
-        [StringLength(20, ErrorMessage = "La cédula no puede exceder 20 caracteres.")]
+        [StringLength(10, ErrorMessage = "La cédula no puede exceder 10 caracteres.")]
         [Index(IsUnique = true)]
         public string Cedula { get; set; }
 
