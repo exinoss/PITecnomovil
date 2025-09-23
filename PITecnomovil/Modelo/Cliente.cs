@@ -13,6 +13,7 @@ namespace PITecnomovil.Modelo
         public string Cedula { get; set; }
         public string Contacto { get; set; }
 
+        //Validaciones para logica de negocio
         public bool IsValid()
         {
             return !string.IsNullOrEmpty(Nombres) && !string.IsNullOrEmpty(Cedula);
