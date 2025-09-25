@@ -15,5 +15,10 @@ namespace PITecnomovil
             this.FormBorderStyle = FormBorderStyle.None;
             this.Visible = true;
         }
+
+        private void materialLabel3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

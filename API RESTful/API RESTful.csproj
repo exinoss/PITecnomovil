@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
@@ -192,6 +192,10 @@
     <Compile Include="Migrations\202507240433225_RestrinccionCedula.Designer.cs">
       <DependentUpon>202507240433225_RestrinccionCedula.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202509230853039_NuevaColumnaEstadoPagado.cs" />
+    <Compile Include="Migrations\202509230853039_NuevaColumnaEstadoPagado.Designer.cs">
+      <DependentUpon>202509230853039_NuevaColumnaEstadoPagado.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Producto.cs" />
@@ -354,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202507240433225_RestrinccionCedula.resx">
       <DependentUpon>202507240433225_RestrinccionCedula.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509230853039_NuevaColumnaEstadoPagado.resx">
+      <DependentUpon>202509230853039_NuevaColumnaEstadoPagado.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
