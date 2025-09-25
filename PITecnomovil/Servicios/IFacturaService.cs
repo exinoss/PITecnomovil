@@ -8,7 +8,7 @@ namespace PITecnomovil.Servicios
     {
         Task<IEnumerable<Factura>> GetFacturasAsync();
         Task<Factura> GetFacturaByIdAsync(int id);
-        Task AddFacturaAsync(Factura factura);
+        Task<Factura> AddFacturaAsync(Factura factura);
         Task UpdateFacturaAsync(Factura factura);
         Task DeleteFacturaAsync(int id);
     }

@@ -589,6 +589,9 @@ namespace PITecnomovil
 
         private async Task ProcessSaleTransactionally()
         {
+            int idVenta = 0;
+            bool ventaCreada = false;
+            
             try
             {
                 // Validar método de pago
@@ -611,6 +614,8 @@ namespace PITecnomovil
                 decimal subtotal = total / 1.12m; // Asumiendo IVA del 12%
                 decimal iva = total - subtotal;
                 
+                System.Diagnostics.Debug.WriteLine($"Procesando venta - Cliente: {idCliente}, Total: {total}");
+                
                 // Crear la venta principal
                 var venta = new Venta
                 {
@@ -629,20 +634,25 @@ namespace PITecnomovil
                 }
 
                 // Guardar la venta principal y obtener el ID generado
+                System.Diagnostics.Debug.WriteLine("Guardando venta principal...");
                 await _ventaService.AddVentaAsync(venta);
+                ventaCreada = true;
+                System.Diagnostics.Debug.WriteLine("Venta principal guardada exitosamente");
                 
                 // Obtener el ID de la venta recién creada
+                System.Diagnostics.Debug.WriteLine("Obteniendo ID de venta creada...");
                 var ventas = await _ventaService.GetVentasAsync();
-                var ventaCreada = ventas.Where(v => v.IdCliente == idCliente && v.IdUsuario == _idUsuario)
-                                       .OrderByDescending(v => v.Fecha)
-                                       .FirstOrDefault();
+                var ventaObtenida = ventas.Where(v => v.IdCliente == idCliente && v.IdUsuario == _idUsuario)
+                                         .OrderByDescending(v => v.Fecha)
+                                         .FirstOrDefault();
 
-                if (ventaCreada == null)
+                if (ventaObtenida == null)
                 {
                     throw new Exception("No se pudo obtener el ID de la venta creada.");
                 }
 
-                int idVenta = ventaCreada.IdVenta;
+                idVenta = ventaObtenida.IdVenta;
+                System.Diagnostics.Debug.WriteLine($"ID de venta obtenido: {idVenta}");
 
                 // Procesar cada elemento del DataGridView
                 var ventaProductosToSave = new List<VentaProducto>();
@@ -695,24 +705,30 @@ namespace PITecnomovil
                 }
 
                 // Guardar todos los productos de la venta
+                System.Diagnostics.Debug.WriteLine($"Guardando {ventaProductosToSave.Count} productos de venta...");
                 foreach (var ventaProducto in ventaProductosToSave)
                 {
                     await _ventaProductoService.AddVentaProductoAsync(ventaProducto);
                 }
 
                 // Guardar todas las reparaciones de la venta
+                System.Diagnostics.Debug.WriteLine($"Guardando {ventaReparacionesToSave.Count} reparaciones de venta...");
                 foreach (var ventaReparacion in ventaReparacionesToSave)
                 {
                     await _ventaReparacionService.AddVentaReparacionAsync(ventaReparacion);
                 }
+                
+                System.Diagnostics.Debug.WriteLine("Todos los items de venta guardados exitosamente");
 
                 // Intentar crear la factura y pago (funcionalidad opcional)
                 Factura facturaCreada = null;
                 bool facturaYPagoCreados = false;
                 string mensajeFacturacion = "";
 
+                // PASO CRÍTICO: La venta ya está guardada en BD. Lo que sigue es opcional.
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Intentando crear factura...");
                     // Crear la factura
                     var factura = new Factura
                     {
@@ -731,18 +747,15 @@ namespace PITecnomovil
                         throw new Exception("Los datos de la factura no son válidos.");
                     }
 
-                    await _facturaService.AddFacturaAsync(factura);
-
-                    // Obtener la factura creada para obtener su ID
-                    var facturas = await _facturaService.GetFacturasAsync();
-                    facturaCreada = facturas.Where(f => f.IdVenta == idVenta)
-                                               .OrderByDescending(f => f.FechaEmision)
-                                               .FirstOrDefault();
+                    // Crear la factura y obtener la factura creada con su ID directamente
+                    facturaCreada = await _facturaService.AddFacturaAsync(factura);
 
                     if (facturaCreada == null)
                     {
-                        throw new Exception("No se pudo obtener el ID de la factura creada.");
+                        throw new Exception("No se pudo crear la factura.");
                     }
+
+                    System.Diagnostics.Debug.WriteLine($"Factura creada: {facturaCreada.Numero}");
 
                     // Crear el registro de pago
                     var pago = new Pago
@@ -758,13 +771,16 @@ namespace PITecnomovil
                         throw new Exception("Los datos del pago no son válidos.");
                     }
 
+                    // Crear el pago (no necesitamos guardar la respuesta para este caso)
                     await _pagoService.AddPagoAsync(pago);
                     facturaYPagoCreados = true;
                     mensajeFacturacion = $"Factura: {facturaCreada.Numero}";
+                    System.Diagnostics.Debug.WriteLine("Factura y pago creados exitosamente");
                 }
                 catch (Exception facturaEx)
                 {
                     // Si falla la facturación, continuar sin ella pero registrar el error
+                    System.Diagnostics.Debug.WriteLine($"Error en facturación: {facturaEx.Message}");
                     mensajeFacturacion = "Advertencia: No se pudo generar la factura (API no disponible)";
                     facturaCreada = new Factura 
                     { 
@@ -818,9 +834,27 @@ namespace PITecnomovil
             }
             catch (Exception ex)
             {
-                // En caso de error, mostrar mensaje y mantener los datos
-                MessageBox.Show($"Error al procesar la venta: {ex.Message}\n\nLos datos se han mantenido para que pueda intentar nuevamente.", 
-                              "Error en la Transacción", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Diagnostics.Debug.WriteLine($"ERROR PRINCIPAL: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                
+                string errorMessage = $"Error al procesar la venta: {ex.Message}";
+                
+                // Si la venta ya se guardó, informar al usuario
+                if (ventaCreada && idVenta > 0)
+                {
+                    errorMessage += $"\n\nNOTA IMPORTANTE: La venta principal (ID: {idVenta}) SÍ se guardó en la base de datos, pero hubo problemas con procesos adicionales.";
+                    MessageBox.Show(errorMessage, "Venta Parcialmente Completada", 
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    
+                    // Si la venta se guardó, limpiar el formulario
+                    ClearFormAfterSale();
+                }
+                else
+                {
+                    errorMessage += "\n\nLos datos se han mantenido para que pueda intentar nuevamente.";
+                    MessageBox.Show(errorMessage, "Error en la Transacción", 
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {

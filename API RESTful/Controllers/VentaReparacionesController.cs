@@ -58,7 +58,7 @@ namespace API_RESTful.Controllers
             var reparacion = _context.Reparaciones.Find(ventaReparacion.IdReparacion);
             if (reparacion != null)
             {
-                reparacion.Estado = "PAGADO";
+                reparacion.Estado = "Pagado";
                 _context.SaveChanges();
             }
 

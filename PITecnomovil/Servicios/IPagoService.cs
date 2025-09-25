@@ -8,7 +8,7 @@ namespace PITecnomovil.Servicios
     {
         Task<IEnumerable<Pago>> GetPagosAsync();
         Task<Pago> GetPagoByIdAsync(int id);
-        Task AddPagoAsync(Pago pago);
+        Task<Pago> AddPagoAsync(Pago pago);
         Task UpdatePagoAsync(Pago pago);
         Task DeletePagoAsync(int id);
     }

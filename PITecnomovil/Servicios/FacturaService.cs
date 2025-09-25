@@ -49,7 +49,7 @@ namespace PITecnomovil.Servicios
             }
         }
 
-        public async Task AddFacturaAsync(Factura factura)
+        public async Task<Factura> AddFacturaAsync(Factura factura)
         {
             try
             {
@@ -60,6 +60,10 @@ namespace PITecnomovil.Servicios
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(_baseUrl, content);
                 response.EnsureSuccessStatusCode();
+                
+                // Obtener la factura creada desde la respuesta
+                var responseJson = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Factura>(responseJson);
             }
             catch (HttpRequestException ex)
             {

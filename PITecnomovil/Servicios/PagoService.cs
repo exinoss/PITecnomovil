@@ -49,7 +49,7 @@ namespace PITecnomovil.Servicios
             }
         }
 
-        public async Task AddPagoAsync(Pago pago)
+        public async Task<Pago> AddPagoAsync(Pago pago)
         {
             try
             {
@@ -60,6 +60,10 @@ namespace PITecnomovil.Servicios
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(_baseUrl, content);
                 response.EnsureSuccessStatusCode();
+                
+                // Obtener el pago creado desde la respuesta
+                var responseJson = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Pago>(responseJson);
             }
             catch (HttpRequestException ex)
             {

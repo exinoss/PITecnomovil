@@ -19,11 +19,16 @@ namespace PITecnomovil
         private CancellationTokenSource _searchReparacionesCts;
         private List<Reparacion> _reparacionesCache;
         private List<Cliente> _clientesCache;
+     
+        // Variables de usuario
+        private readonly int _idUsuario; // Id del usuario que crea la reparaciÃ³n
+        private int _loadedUsuarioId; // Id del usuario cuando se edita una reparaciÃ³n existente
 
-        // Esta variable contiene el Id del usuario que crea la reparación
-        private readonly int _idUsuario;
-        // Cuando se edita, guardamos aquí el IdUsuario que vino de la BD
-        private int _loadedUsuarioId;
+        // Textos de ayuda para placeholders
+        private const string PLACEHOLDER_DIAGNOSTICO = "Ingrese el diagnÃ³stico del dispositivo...";
+        private const string PLACEHOLDER_OBSERVACIONES = "Ingrese observaciones adicionales...";
+        // Esta variable contiene el Id del usuario que crea la reparaciÃ³n
+ 
         public frmReparaciones(int idUsuario)
         {
             InitializeComponent();
@@ -37,16 +42,66 @@ namespace PITecnomovil
             this.FormBorderStyle = FormBorderStyle.None;
             this.Visible = true;
 
-            LoadClientes();
-            LoadReparaciones();
+            ConfigurarPlaceholders();
             ResetForm();
+            _ = LoadClientesAsync(); // Fire-and-forget para carga inicial
+            _ = LoadReparacionesAsync(); // Fire-and-forget para carga inicial
         }
-        private async void LoadClientes()
+        private async Task LoadClientesAsync()
         {
-            _clientesCache = await _clienteService.GetClientesAsync();
+            try
+            {
+                _clientesCache = await _clienteService.GetClientesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar clientes: {ex.Message}",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private async void LoadReparaciones()
+        private void ConfigurarPlaceholders()
+        {
+            // Configurar placeholder para txtDiagnostico
+            SetPlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO);
+            txtDiagnostico.Enter += TxtDiagnostico_Enter;
+            txtDiagnostico.Leave += TxtDiagnostico_Leave;
+
+            // Configurar placeholder para txtObservaciones
+            SetPlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES);
+            txtObservaciones.Enter += TxtObservaciones_Enter;
+            txtObservaciones.Leave += TxtObservaciones_Leave;
+        }
+
+        private void SetPlaceholder(MaterialSkin.Controls.MaterialMultiLineTextBox textBox, string placeholder)
+        {
+            textBox.Text = placeholder;
+            textBox.ForeColor = System.Drawing.Color.Gray;
+        }
+
+        private void RemovePlaceholder(MaterialSkin.Controls.MaterialMultiLineTextBox textBox, string placeholder)
+        {
+            if (textBox.Text == placeholder)
+            {
+                textBox.Text = "";
+                textBox.ForeColor = System.Drawing.Color.Black;
+            }
+        }
+
+        private void RestorePlaceholder(MaterialSkin.Controls.MaterialMultiLineTextBox textBox, string placeholder)
+        {
+            if (string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                SetPlaceholder(textBox, placeholder);
+            }
+        }
+
+        private bool IsPlaceholder(MaterialSkin.Controls.MaterialMultiLineTextBox textBox, string placeholder)
+        {
+            return textBox.Text == placeholder && textBox.ForeColor == System.Drawing.Color.Gray;
+        }
+
+        private async Task LoadReparacionesAsync()
         {
             try
             {
@@ -83,19 +138,48 @@ namespace PITecnomovil
 
             txtBuscarCliente.Text = "";
             txtNombres.Text = "";
+            txtNombres.Tag = null;
             txtDispositivo.Text = "";
-            txtDiagnostico.Text = "";
-            txtObservaciones.Text = "";
             txtPrecio.Text = "";
             cmbEstado.SelectedIndex = -1;
             dtFechaIngreso.Value = DateTime.Today;
             dtFechaEntrega.Value = DateTime.Today.AddDays(1);
 
+            // Restaurar placeholders
+            SetPlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO);
+            SetPlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES);
+
             dataGridViewALL.ClearSelection();
         }
         private void txtPrecio_TextChanged(object sender, EventArgs e)
         {
-
+            // Permitir solo nÃºmeros y punto decimal
+            string text = txtPrecio.Text;
+            if (!string.IsNullOrEmpty(text))
+            {
+                // Remover caracteres no vÃ¡lidos excepto nÃºmeros y un punto decimal
+                string cleanedText = "";
+                bool hasDecimalPoint = false;
+                
+                foreach (char c in text)
+                {
+                    if (char.IsDigit(c))
+                    {
+                        cleanedText += c;
+                    }
+                    else if (c == '.' && !hasDecimalPoint)
+                    {
+                        cleanedText += c;
+                        hasDecimalPoint = true;
+                    }
+                }
+                
+                if (cleanedText != text)
+                {
+                    txtPrecio.Text = cleanedText;
+                    txtPrecio.SelectionStart = txtPrecio.Text.Length;
+                }
+            }
         }
 
         private void frmReparaciones_Load(object sender, EventArgs e)
@@ -106,7 +190,6 @@ namespace PITecnomovil
         {
             reparacion = null;
 
-            MessageBox.Show(txtNombres.Tag.ToString());
             // Cliente
             if (!(txtNombres.Tag is int idCliente))
             {
@@ -136,7 +219,7 @@ namespace PITecnomovil
             // PrecioServicio
             if (!decimal.TryParse(txtPrecio.Text.Trim(), out var precio) || precio < 0m)
             {
-                MessageBox.Show("El precio del servicio debe ser un número válido.", "Error",
+                MessageBox.Show("El precio del servicio debe ser un nÃºmero vÃ¡lido.", "Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -147,17 +230,26 @@ namespace PITecnomovil
 
             if (cmbEstado.Text == "Entregado")
             {
-                // validar entrega sólo si está habilitado (es Entregado)
+                // validar entrega sÃ³lo si estÃ¡ habilitado (es Entregado)
                 entrega = dtFechaEntrega.Value.Date;
                 if (entrega < ingreso.AddDays(1))
                 {
                     MessageBox.Show(
-                      "La fecha de entrega debe ser al menos un día posterior a la de ingreso.",
+                      "La fecha de entrega debe ser al menos un dÃ­a posterior a la de ingreso.",
                       "Error", MessageBoxButtons.OK, MessageBoxIcon.Error
                     );
                     return false;
                 }
             }
+
+            // Obtener diagnÃ³stico y observaciones sin placeholders
+            string diagnostico = IsPlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO) 
+                ? "" 
+                : txtDiagnostico.Text.Trim();
+            
+            string observaciones = IsPlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES) 
+                ? "" 
+                : txtObservaciones.Text.Trim();
 
             reparacion = new Reparacion
             {
@@ -169,14 +261,14 @@ namespace PITecnomovil
                 Estado = estado,
                 Dispositivo = dispositivo,
                 PrecioServicio = precio,
-                Diagnostico = txtDiagnostico.Text.Trim(),
-                Observaciones = txtObservaciones.Text.Trim()
+                Diagnostico = diagnostico,
+                Observaciones = observaciones
             };
             return true;
         }
         private void dtFechaIngreso_ValueChanged(object sender, EventArgs e)
         {
-            // Fecha de entrega al menos un día después
+            // Fecha de entrega al menos un dÃ­a despuÃ©s
             if (dtFechaEntrega.Enabled)
             {
                 dtFechaEntrega.MinDate = dtFechaIngreso.Value.AddDays(1);
@@ -189,6 +281,7 @@ namespace PITecnomovil
         {
             txtBuscarCliente.Text = "";
             txtNombres.Text = "";
+            txtNombres.Tag = null;
         }
 
         private async void txtBuscarCliente_TextChanged(object sender, EventArgs e)
@@ -206,6 +299,11 @@ namespace PITecnomovil
                     return;
                 }
 
+                if (_clientesCache == null || !_clientesCache.Any())
+                {
+                    return; // Cache no disponible aÃºn
+                }
+
                 var resultados = _clientesCache
                     .Where(c =>
                         c.Cedula.ToLower().Contains(filtro) ||
@@ -216,9 +314,6 @@ namespace PITecnomovil
                 {
                     var cliente = resultados[0];
                     txtNombres.Text = cliente.Nombres;
-                    // Guardamos el IdCliente para el POST/PUT
-                    _selectedReparacionId = null;
-                    // almacenamos IdCliente en Tag para el build
                     txtNombres.Tag = cliente.IdCliente;
                 }
             }
@@ -240,25 +335,48 @@ namespace PITecnomovil
                 await Task.Delay(300, _searchReparacionesCts.Token);
                 var filtro = txtBuscarReparacion.Text.Trim().ToLower();
 
+                if (_reparacionesCache == null || !_reparacionesCache.Any())
+                {
+                    return; // Cache no disponible aÃºn
+                }
+
+                List<Reparacion> reparacionesAMostrar;
+
                 if (string.IsNullOrEmpty(filtro))
                 {
-                    dataGridViewALL.DataSource = _reparacionesCache;
+                    reparacionesAMostrar = _reparacionesCache;
                 }
                 else
                 {
-                    var filtradas = _reparacionesCache
+                    reparacionesAMostrar = _reparacionesCache
                         .Where(r =>
                             r.Cliente.Cedula.ToLower().Contains(filtro) ||
                             r.Cliente.Nombres.ToLower().Contains(filtro) ||
                             r.Usuario.NombreUsuario.ToLower().Contains(filtro))
                         .ToList();
-                    dataGridViewALL.DataSource = filtradas;
                 }
+
+                // Crear la proyecciÃ³n consistente con LoadReparaciones()
+                var listaPlano = reparacionesAMostrar
+                    .Select(r => new
+                    {
+                        r.IdReparacion,
+                        Cliente = r.Cliente.Nombres,
+                        Usuario = r.Usuario.NombreUsuario,
+                        r.Estado,
+                        FechaIngreso = r.FechaIngreso.ToShortDateString(),
+                        FechaEntrega = r.FechaEntrega?.ToShortDateString() ?? "",
+                        r.Dispositivo,
+                        r.PrecioServicio
+                    })
+                    .ToList();
+
+                dataGridViewALL.DataSource = listaPlano;
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al buscar reparación: {ex.Message}",
+                MessageBox.Show($"Error al buscar reparaciÃ³n: {ex.Message}",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -267,37 +385,70 @@ namespace PITecnomovil
         {
             if (e.RowIndex < 0) return;
 
-         
             try
             {
-                var repar = dataGridViewALL.Rows[e.RowIndex].DataBoundItem as Reparacion;
-                if (repar == null) return;
+                // Obtener el IdReparacion de la fila seleccionada
+                var row = dataGridViewALL.Rows[e.RowIndex];
+                if (row.Cells["IdReparacion"].Value == null) return;
 
-                // 2) Guarda el Id correcto
-                _selectedReparacionId = repar.IdReparacion;
-                _loadedUsuarioId = repar.IdUsuario;
-                MessageBox.Show("user: "+_loadedUsuarioId+" "+"rep: "+_selectedReparacionId);
-                var reparacion = await _reparacionService.GetReparacionAsync((int)_selectedReparacionId);
-                // Cargo campos
+                int idReparacion = Convert.ToInt32(row.Cells["IdReparacion"].Value);
+                
+                // Buscar la reparaciÃ³n completa en el cache
+                var reparacionCache = _reparacionesCache.FirstOrDefault(r => r.IdReparacion == idReparacion);
+                if (reparacionCache == null)
+                {
+                    MessageBox.Show("No se pudo encontrar la reparaciÃ³n seleccionada.", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Guardar IDs para operaciones posteriores
+                _selectedReparacionId = idReparacion;
+                _loadedUsuarioId = reparacionCache.IdUsuario;
+
+                // Obtener los detalles completos de la reparaciÃ³n desde la API
+                var reparacion = await _reparacionService.GetReparacionAsync(idReparacion);
+                
+                // Cargar campos
                
                 txtBuscarCliente.Text = reparacion.Cliente.Cedula;
                 txtNombres.Text = reparacion.Cliente.Nombres;
                 txtNombres.Tag = reparacion.IdCliente;
                 cmbEstado.Text = reparacion.Estado;
                 txtDispositivo.Text = reparacion.Dispositivo;
-                txtDiagnostico.Text = reparacion.Diagnostico;
-                txtObservaciones.Text = reparacion.Observaciones;
                 txtPrecio.Text = reparacion.PrecioServicio.ToString();
                 dtFechaIngreso.Value = reparacion.FechaIngreso;
                 if (reparacion.FechaEntrega.HasValue)
                     dtFechaEntrega.Value = reparacion.FechaEntrega.Value;
+
+                // Manejar diagnÃ³stico con placeholder
+                if (!string.IsNullOrWhiteSpace(reparacion.Diagnostico))
+                {
+                    txtDiagnostico.Text = reparacion.Diagnostico;
+                    txtDiagnostico.ForeColor = System.Drawing.Color.Black;
+                }
+                else
+                {
+                    SetPlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO);
+                }
+
+                // Manejar observaciones con placeholder
+                if (!string.IsNullOrWhiteSpace(reparacion.Observaciones))
+                {
+                    txtObservaciones.Text = reparacion.Observaciones;
+                    txtObservaciones.ForeColor = System.Drawing.Color.Black;
+                }
+                else
+                {
+                    SetPlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES);
+                }
 
                 _RegistrarActualizar = false;
                 btnGuardar.Text = "Actualizar";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar reparación: {ex.Message}",
+                MessageBox.Show($"Error al cargar reparaciÃ³n: {ex.Message}",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -310,9 +461,9 @@ namespace PITecnomovil
                     return;
 
                 var msj = _RegistrarActualizar
-                    ? "¿Confirma creación de la reparación?"
-                    : "¿Confirma actualización de la reparación?";
-                if (!MessageBox.Show(msj, "Confirmación",
+                    ? "Â¿Confirma creaciÃ³n de la reparaciÃ³n?"
+                    : "Â¿Confirma actualizaciÃ³n de la reparaciÃ³n?";
+                if (!MessageBox.Show(msj, "Confirmaciï¿½n",
                                      MessageBoxButtons.YesNo,
                                      MessageBoxIcon.Question)
                       .Equals(DialogResult.Yes))
@@ -323,7 +474,7 @@ namespace PITecnomovil
                 else
                     await _reparacionService.UpdateReparacionAsync(rep.IdReparacion, rep);
 
-                LoadReparaciones();
+                await LoadReparacionesAsync();
                 ResetForm();
             }
             catch (Exception ex)
@@ -339,17 +490,17 @@ namespace PITecnomovil
             {
                 if (!_selectedReparacionId.HasValue)
                 {
-                    MessageBox.Show("Selecciona una reparación para eliminar.", "Advertencia",
+                    MessageBox.Show("Selecciona una reparaciÃ³n para eliminar.", "Advertencia",
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (MessageBox.Show("¿Confirma eliminación de la reparación?", "Confirmación",
+                if (MessageBox.Show("Â¿Confirma eliminaciÃ³n de la reparaciÃ³n?", "ConfirmaciÃ³n",
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     != DialogResult.Yes)
                     return;
 
                 await _reparacionService.DeleteReparacionAsync(_selectedReparacionId.Value);
-                LoadReparaciones();
+                await LoadReparacionesAsync();
                 ResetForm();
             }
             catch (Exception ex)
@@ -364,7 +515,7 @@ namespace PITecnomovil
             var estado = cmbEstado.Text;
             if (estado == "Entregado")
             {
-                // Entregado, fecha obligatoria y con mínimo de 1 día
+                // Entregado, fecha obligatoria y con mÃ­nimo de 1 dÃ­a
                 dtFechaEntrega.Enabled = true;
                 dtFechaIngreso_ValueChanged(this, EventArgs.Empty);
             }
@@ -373,6 +524,33 @@ namespace PITecnomovil
                 // Pendiente o Cancelado, no obligatorio, desactivado
                 dtFechaEntrega.Enabled = false;
             }
+        }
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            ResetForm();
+        }
+
+        // Eventos para placeholder de txtDiagnostico
+        private void TxtDiagnostico_Enter(object sender, EventArgs e)
+        {
+            RemovePlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO);
+        }
+
+        private void TxtDiagnostico_Leave(object sender, EventArgs e)
+        {
+            RestorePlaceholder(txtDiagnostico, PLACEHOLDER_DIAGNOSTICO);
+        }
+
+        // Eventos para placeholder de txtObservaciones
+        private void TxtObservaciones_Enter(object sender, EventArgs e)
+        {
+            RemovePlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES);
+        }
+
+        private void TxtObservaciones_Leave(object sender, EventArgs e)
+        {
+            RestorePlaceholder(txtObservaciones, PLACEHOLDER_OBSERVACIONES);
         }
     }
 }
