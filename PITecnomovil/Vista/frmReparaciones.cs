@@ -2,6 +2,7 @@ using PITecnomovil.Modelo;
 using PITecnomovil.Servicios;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -217,7 +218,7 @@ namespace PITecnomovil
             }
 
             // PrecioServicio
-            if (!decimal.TryParse(txtPrecio.Text.Trim(), out var precio) || precio < 0m)
+            if (!decimal.TryParse(txtPrecio.Text.Trim(), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var precio) || precio < 0m)
             {
                 MessageBox.Show("El precio del servicio debe ser un número válido.", "Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -416,7 +417,7 @@ namespace PITecnomovil
                 txtNombres.Tag = reparacion.IdCliente;
                 cmbEstado.Text = reparacion.Estado;
                 txtDispositivo.Text = reparacion.Dispositivo;
-                txtPrecio.Text = reparacion.PrecioServicio.ToString();
+                txtPrecio.Text = reparacion.PrecioServicio.ToString("0.00", CultureInfo.InvariantCulture);
                 dtFechaIngreso.Value = reparacion.FechaIngreso;
                 if (reparacion.FechaEntrega.HasValue)
                     dtFechaEntrega.Value = reparacion.FechaEntrega.Value;
@@ -463,7 +464,7 @@ namespace PITecnomovil
                 var msj = _RegistrarActualizar
                     ? "¿Confirma creación de la reparación?"
                     : "¿Confirma actualización de la reparación?";
-                if (!MessageBox.Show(msj, "Confirmaci�n",
+                if (!MessageBox.Show(msj, "Confirmación",
                                      MessageBoxButtons.YesNo,
                                      MessageBoxIcon.Question)
                       .Equals(DialogResult.Yes))
