@@ -390,6 +390,7 @@ namespace PITecnomovil
             this.VerVentas.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             this.VerVentas.UseAccentColor = false;
             this.VerVentas.UseVisualStyleBackColor = true;
+            this.VerVentas.Click += new System.EventHandler(this.VerVentas_Click);
             // 
             // btnLimpiarCliente
             // 

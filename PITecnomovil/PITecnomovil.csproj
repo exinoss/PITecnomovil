@@ -81,6 +81,7 @@
     <Compile Include="Modelo\Pago.cs" />
     <Compile Include="Modelo\Usuario.cs" />
     <Compile Include="Modelo\Venta.cs" />
+    <Compile Include="Modelo\VentaConCliente.cs" />
     <Compile Include="Modelo\VentaProducto.cs" />
     <Compile Include="Modelo\Producto.cs" />
     <Compile Include="Modelo\Reparacion.cs" />

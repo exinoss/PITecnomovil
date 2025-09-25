@@ -1,5 +1,6 @@
 using PITecnomovil.Modelo;
 using PITecnomovil.Servicios;
+using PITecnomovil.Vista;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -986,6 +987,12 @@ namespace PITecnomovil
         private void cmbMetodoPago_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void VerVentas_Click(object sender, EventArgs e)
+        {
+            frmVerVentas ver = new frmVerVentas();
+            ver.ShowDialog();
         }
     }
 }
