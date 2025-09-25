@@ -98,5 +98,29 @@ namespace API_RESTful.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        // GET api/reparaciones/cliente/{idCliente}/unpaid
+        [HttpGet, Route("cliente/{idCliente:int}/unpaid")]
+        public IHttpActionResult GetUnpaidRepairsByClient(int idCliente)
+        {
+            try
+            {
+                // Obtener reparaciones del cliente que no han sido vendidas o que están pendientes de pago
+                var unpaidRepairs = _context.Reparaciones
+                    .Include(r => r.Cliente)
+                    .Include(r => r.Usuario)
+                    .Where(r => r.IdCliente == idCliente && 
+                               r.Estado == "Entregado" && // Solo reparaciones entregadas
+                               !_context.VentaReparaciones.Any(vr => vr.IdReparacion == r.IdReparacion && 
+                                                                     vr.EstadoPago == "PAGADO"))
+                    .ToList();
+
+                return Ok(unpaidRepairs);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

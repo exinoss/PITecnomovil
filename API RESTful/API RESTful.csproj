@@ -163,8 +163,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
+    <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PagosController.cs" />
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\ReparacionesController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
@@ -196,8 +198,22 @@
     <Compile Include="Migrations\202509230853039_NuevaColumnaEstadoPagado.Designer.cs">
       <DependentUpon>202509230853039_NuevaColumnaEstadoPagado.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202509250949348_tablas.cs" />
+    <Compile Include="Migrations\202509250949348_tablas.Designer.cs">
+      <DependentUpon>202509250949348_tablas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509250959192_tablasFActuraPagos.cs" />
+    <Compile Include="Migrations\202509250959192_tablasFActuraPagos.Designer.cs">
+      <DependentUpon>202509250959192_tablasFActuraPagos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509251141269_aggCorreoAClientes.cs" />
+    <Compile Include="Migrations\202509251141269_aggCorreoAClientes.Designer.cs">
+      <DependentUpon>202509251141269_aggCorreoAClientes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\Factura.cs" />
+    <Compile Include="Models\Pago.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Reparacion.cs" />
     <Compile Include="Models\Usuario.cs" />
@@ -274,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />
@@ -361,6 +378,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202509230853039_NuevaColumnaEstadoPagado.resx">
       <DependentUpon>202509230853039_NuevaColumnaEstadoPagado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509250949348_tablas.resx">
+      <DependentUpon>202509250949348_tablas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509250959192_tablasFActuraPagos.resx">
+      <DependentUpon>202509250959192_tablasFActuraPagos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509251141269_aggCorreoAClientes.resx">
+      <DependentUpon>202509251141269_aggCorreoAClientes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

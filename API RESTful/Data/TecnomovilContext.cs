@@ -20,6 +20,8 @@ namespace API_RESTful.Data
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<VentaProducto> VentaProductos { get; set; }
         public DbSet<VentaReparacion> VentaReparaciones { get; set; }
+        public DbSet<Factura> Facturas { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -30,6 +32,8 @@ namespace API_RESTful.Data
             modelBuilder.Entity<Venta>().ToTable("Venta");
             modelBuilder.Entity<VentaProducto>().ToTable("VentaProducto");
             modelBuilder.Entity<VentaReparacion>().ToTable("VentaReparacion");
+            modelBuilder.Entity<Factura>().ToTable("Factura");
+            modelBuilder.Entity<Pago>().ToTable("Pago");
 
             // Configurar relaciones
             modelBuilder.Entity<Reparacion>()
@@ -70,6 +74,44 @@ namespace API_RESTful.Data
                 .HasRequired(vr => vr.Reparacion)
                 .WithMany(r => r.VentaReparaciones)     
                 .HasForeignKey(vr => vr.IdReparacion)
+                .WillCascadeOnDelete(false);
+
+            // Configurar precisión decimal para Factura
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Subtotal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.IVA)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Total)
+                .HasPrecision(18, 2);
+
+            // Configurar precisión decimal para Pago
+            modelBuilder.Entity<Pago>()
+                .Property(p => p.Monto)
+                .HasPrecision(18, 2);
+
+            // Configurar relaciones para Factura
+            modelBuilder.Entity<Factura>()
+                .HasRequired(f => f.Venta)
+                .WithMany()
+                .HasForeignKey(f => f.IdVenta)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Factura>()
+                .HasRequired(f => f.Cliente)
+                .WithMany()
+                .HasForeignKey(f => f.IdCliente)
+                .WillCascadeOnDelete(false);
+
+            // Configurar relaciones para Pago
+            modelBuilder.Entity<Pago>()
+                .HasRequired(p => p.Factura)
+                .WithMany(f => f.Pagos)
+                .HasForeignKey(p => p.IdFactura)
                 .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);

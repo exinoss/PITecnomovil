@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using PITecnomovil.Modelo;
 using System;
 using System.Collections.Generic;
@@ -39,8 +39,14 @@ namespace PITecnomovil.Servicios
 
         public async Task AddVentaAsync(Venta venta)
         {
+            // Configurar la serialización JSON para usar cultura invariante
+            var settings = new JsonSerializerSettings
+            {
+                Culture = System.Globalization.CultureInfo.InvariantCulture
+            };
+            
             var content = new StringContent(
-                JsonConvert.SerializeObject(venta),
+                JsonConvert.SerializeObject(venta, settings),
                 Encoding.UTF8,
                 "application/json"
             );

@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,6 +53,7 @@ namespace PITecnomovil.Vista
             txtNombres.Text = "";
             txtCedula.Text = "";
             txtContacto.Text = "";
+            txtCorreo.Text = "";
 
             _selectedClientId = null;
             _RegistrarActualizar = true;
@@ -69,6 +71,7 @@ namespace PITecnomovil.Vista
             txtNombres.Text = row.Cells["Nombres"].Value?.ToString() ?? "";
             txtCedula.Text = row.Cells["Cedula"].Value?.ToString() ?? "";
             txtContacto.Text = row.Cells["Contacto"].Value?.ToString() ?? "";
+            txtCorreo.Text = row.Cells["Correo"].Value?.ToString() ?? "";
 
             _RegistrarActualizar = false;
             btnGuardar.Text = "Actualizar";
@@ -202,17 +205,36 @@ namespace PITecnomovil.Vista
             // 3) Contacto (opcional)
             var contacto = txtContacto.Text.Trim();
 
+            // 4) Correo (opcional, pero si se ingresa debe ser válido)
+            var correo = txtCorreo.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(correo))
+            {
+                var emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                if (!Regex.IsMatch(correo, emailPattern))
+                {
+                    MessageBox.Show("El formato del correo electrónico no es válido.",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+
             cliente = new Cliente
             {
                 IdCliente = _selectedClientId.GetValueOrDefault(),
                 Nombres = nombres,
                 Cedula = cedula,
-                Contacto = contacto
+                Contacto = contacto,
+                Correo = string.IsNullOrWhiteSpace(correo) ? null : correo
             };
 
             return true;
         }
         private void frmClientes_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtCorreo_TextChanged(object sender, EventArgs e)
         {
 
         }

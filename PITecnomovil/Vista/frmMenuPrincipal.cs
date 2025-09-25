@@ -30,20 +30,20 @@ namespace PITecnomovil
 
             frmProductos formulario1 = new frmProductos();
             formulario1.Dock = DockStyle.Fill;
-            materialTabControl1.TabPages[0].Controls.Add(formulario1);
+            materialTabControl1.TabPages[1].Controls.Add(formulario1);
 
             frmClientes formulario2 = new frmClientes();
             formulario2.Dock = DockStyle.Fill;
-            materialTabControl1.TabPages[1].Controls.Add(formulario2);
+            materialTabControl1.TabPages[2].Controls.Add(formulario2);
 
             
             frmVentas formulario3 = new frmVentas(_idUsuario);
             formulario3.Dock = DockStyle.Fill;
-            materialTabControl1.TabPages[2].Controls.Add(formulario3); 
+            materialTabControl1.TabPages[3].Controls.Add(formulario3); 
             
             frmReparaciones formulario4 = new frmReparaciones(_idUsuario);
             formulario4.Dock = DockStyle.Fill;
-            materialTabControl1.TabPages[3].Controls.Add(formulario4);
+            materialTabControl1.TabPages[4].Controls.Add(formulario4);
 
             if (_rol != "ADMIN")
             {
@@ -53,7 +53,7 @@ namespace PITecnomovil
             {
                 frmUsuarios formulario5 = new frmUsuarios();
                 formulario5.Dock = DockStyle.Fill;
-                materialTabControl1.TabPages[4].Controls.Add(formulario5);
+                materialTabControl1.TabPages[5].Controls.Add(formulario5);
             }
 
 

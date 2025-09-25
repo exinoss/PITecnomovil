@@ -1,4 +1,4 @@
-﻿using API_RESTful.Data;
+using API_RESTful.Data;
 using API_RESTful.Models;
 using System;
 using System.Collections.Generic;
@@ -53,6 +53,14 @@ namespace API_RESTful.Controllers
 
             _context.VentaReparaciones.Add(ventaReparacion);
             _context.SaveChanges();
+
+            // Actualizar automáticamente el estado de la reparación a "PAGADO"
+            var reparacion = _context.Reparaciones.Find(ventaReparacion.IdReparacion);
+            if (reparacion != null)
+            {
+                reparacion.Estado = "PAGADO";
+                _context.SaveChanges();
+            }
 
             return CreatedAtRoute(
                 "GetVentaReparacionById",

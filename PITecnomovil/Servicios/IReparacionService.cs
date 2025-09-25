@@ -1,4 +1,4 @@
-﻿using PITecnomovil.Modelo;
+using PITecnomovil.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +14,6 @@ namespace PITecnomovil.Servicios
         Task AddReparacionAsync(Reparacion reparacion);
         Task UpdateReparacionAsync(int id, Reparacion reparacion);
         Task DeleteReparacionAsync(int id);
+        Task<List<Reparacion>> GetUnpaidRepairsByClientAsync(int idCliente);
     }
 }

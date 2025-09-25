@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using PITecnomovil.Modelo;
 using System;
 using System.Collections.Generic;
@@ -64,6 +64,14 @@ namespace PITecnomovil.Servicios
         {
             var resp = await _httpClient.DeleteAsync($"api/reparaciones/{id}");
             resp.EnsureSuccessStatusCode();
+        }
+
+        public async Task<List<Reparacion>> GetUnpaidRepairsByClientAsync(int idCliente)
+        {
+            var resp = await _httpClient.GetAsync($"api/reparaciones/cliente/{idCliente}/unpaid");
+            resp.EnsureSuccessStatusCode();
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<Reparacion>>(json);
         }
     }
 }

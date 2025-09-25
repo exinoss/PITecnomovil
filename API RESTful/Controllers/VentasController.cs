@@ -1,4 +1,4 @@
-﻿using API_RESTful.Data;
+using API_RESTful.Data;
 using API_RESTful.Models;
 using System;
 using System.Collections.Generic;
@@ -50,6 +50,9 @@ namespace API_RESTful.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            // Debug temporal: verificar el valor del Total que llega
+            System.Diagnostics.Debug.WriteLine($"Total recibido en API: {venta.Total}");
 
             _context.Ventas.Add(venta);
             _context.SaveChanges();

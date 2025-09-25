@@ -1,4 +1,4 @@
-﻿using MaterialSkin.Controls;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -70,7 +70,6 @@ namespace PITecnomovil.Vista
                 if (result != null)
                 {
                     MessageBox.Show(result.Message, "Bienvenido", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     this.Hide();
                     var menu = new frmMenuPrincipal(result.Rol,result.IdUsuario);
                     menu.Show();

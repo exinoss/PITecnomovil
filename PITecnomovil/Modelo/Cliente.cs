@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ namespace PITecnomovil.Modelo
         public string Nombres { get; set; }
         public string Cedula { get; set; }
         public string Contacto { get; set; }
+        public string Correo { get; set; }
 
         //Validaciones para logica de negocio
         public bool IsValid()

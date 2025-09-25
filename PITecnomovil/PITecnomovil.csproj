@@ -58,6 +58,8 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
@@ -71,9 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\EmailConfig.cs" />
     <Compile Include="Modelo\Cliente.cs" />
+    <Compile Include="Modelo\Factura.cs" />
     <Compile Include="Modelo\LoginRequest.cs" />
     <Compile Include="Modelo\LoginResponse.cs" />
+    <Compile Include="Modelo\Pago.cs" />
     <Compile Include="Modelo\Usuario.cs" />
     <Compile Include="Modelo\Venta.cs" />
     <Compile Include="Modelo\VentaProducto.cs" />
@@ -87,14 +92,19 @@
     </Compile>
     <Compile Include="Servicios\AuthService.cs" />
     <Compile Include="Servicios\ClienteService.cs" />
+    <Compile Include="Servicios\EmailService.cs" />
+    <Compile Include="Servicios\FacturaService.cs" />
     <Compile Include="Servicios\IAuthService.cs" />
     <Compile Include="Servicios\IClienteService.cs" />
+    <Compile Include="Servicios\IFacturaService.cs" />
+    <Compile Include="Servicios\IPagoService.cs" />
     <Compile Include="Servicios\IProductoService.cs" />
     <Compile Include="Servicios\IReparacionService.cs" />
     <Compile Include="Servicios\IUsuarioService.cs" />
     <Compile Include="Servicios\IVentaProductoService.cs" />
     <Compile Include="Servicios\IVentaReparacionService.cs" />
     <Compile Include="Servicios\IVentaService.cs" />
+    <Compile Include="Servicios\PagoService.cs" />
     <Compile Include="Servicios\ProductoService.cs" />
     <Compile Include="Servicios\ReparacionService.cs" />
     <Compile Include="Servicios\UsuarioService.cs" />
@@ -120,12 +130,6 @@
     <Compile Include="Vista\frmMenuPrincipal.Designer.cs">
       <DependentUpon>frmMenuPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Vista\frmPasarelaPago.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Vista\frmPasarelaPago.Designer.cs">
-      <DependentUpon>frmPasarelaPago.cs</DependentUpon>
-    </Compile>
     <Compile Include="Vista\frmProductos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,12 +141,6 @@
     </Compile>
     <Compile Include="Vista\frmReparaciones.Designer.cs">
       <DependentUpon>frmReparaciones.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Vista\frmReporte.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Vista\frmReporte.Designer.cs">
-      <DependentUpon>frmReporte.cs</DependentUpon>
     </Compile>
     <Compile Include="Vista\frmUsuarios.cs">
       <SubType>Form</SubType>
@@ -158,6 +156,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vista\frmVerVentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Vista\frmVerVentas.Designer.cs">
+      <DependentUpon>frmVerVentas.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -172,23 +176,20 @@
     <EmbeddedResource Include="Vista\frmMenuPrincipal.resx">
       <DependentUpon>frmMenuPrincipal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Vista\frmPasarelaPago.resx">
-      <DependentUpon>frmPasarelaPago.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmProductos.resx">
       <DependentUpon>frmProductos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmReparaciones.resx">
       <DependentUpon>frmReparaciones.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Vista\frmReporte.resx">
-      <DependentUpon>frmReporte.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmUsuarios.resx">
       <DependentUpon>frmUsuarios.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Vista\frmVentas.resx">
       <DependentUpon>frmVentas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vista\frmVerVentas.resx">
+      <DependentUpon>frmVerVentas.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -204,9 +205,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Config\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\API RESTful\API RESTful.csproj">
       <Project>{31af6607-2f75-4680-b711-be5a6a641176}</Project>

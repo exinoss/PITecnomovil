@@ -10,17 +10,11 @@ using System.Windows.Forms;
 
 namespace PITecnomovil.Vista
 {
-    public partial class frmReporte : Form
+    public partial class frmVerVentas : Form
     {
-        public frmReporte()
+        public frmVerVentas()
         {
             InitializeComponent();
-        }
-
-        private void frmReporte_Load(object sender, EventArgs e)
-        {
-
-            this.rpwReportes.RefreshReport();
         }
     }
 }

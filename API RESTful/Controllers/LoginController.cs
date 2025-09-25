@@ -31,7 +31,7 @@ namespace API_RESTful.Controllers
             if (usuario == null)
                 return Unauthorized();
 
-            return Ok(new { Message = "Login exitoso", Rol = usuario.Rol });
+            return Ok(new { Message = "Login exitoso", Rol = usuario.Rol, IdUsuario = usuario.IdUsuario });
         }
     }
 

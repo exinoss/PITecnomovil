@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +23,9 @@ namespace API_RESTful.Models
 
         [StringLength(100, ErrorMessage = "El contacto no puede exceder 100 caracteres.")]
         public string Contacto { get; set; }
+
+        [StringLength(150, ErrorMessage = "El correo no puede exceder 150 caracteres.")]
+        [EmailAddress(ErrorMessage = "El formato del correo electrónico no es válido.")]
+        public string Correo { get; set; }
     }
 }
