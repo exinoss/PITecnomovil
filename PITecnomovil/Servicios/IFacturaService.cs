@@ -11,5 +11,9 @@ namespace PITecnomovil.Servicios
         Task<Factura> AddFacturaAsync(Factura factura);
         Task UpdateFacturaAsync(Factura factura);
         Task DeleteFacturaAsync(int id);
+        
+        // Métodos SQL directos para evitar problemas con la API
+        bool InsertFacturaSQL(Factura factura, out int idFactura);
+        bool InsertPagoSQL(Pago pago);
     }
 }

@@ -16,5 +16,25 @@ namespace PITecnomovil.Vista
         {
             InitializeComponent();
         }
+
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewALL_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewALL_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
     }
 }

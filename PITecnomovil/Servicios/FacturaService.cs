@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using PITecnomovil.Modelo;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Net.Http;
 using System.Text;
@@ -13,6 +14,7 @@ namespace PITecnomovil.Servicios
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl = "http://localhost:44396/api/facturas";
+        private readonly string _connectionString = "Server=.;Database=TecnomovilDB;User ID=sa;Password=123456;";
 
         public FacturaService()
         {
@@ -108,6 +110,82 @@ namespace PITecnomovil.Servicios
             {
                 throw new Exception($"Error al eliminar factura: {ex.Message}");
             }
+        }
+
+        // Métodos SQL directos para evitar problemas con la API
+        public bool InsertFacturaSQL(Factura factura, out int idFactura)
+        {
+            idFactura = 0;
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    
+                    string query = @"
+                        INSERT INTO Factura (Numero, FechaEmision, Subtotal, IVA, Total, Estado, IdVenta, IdCliente)
+                        VALUES (@Numero, @FechaEmision, @Subtotal, @IVA, @Total, @Estado, @IdVenta, @IdCliente);
+                        SELECT CAST(SCOPE_IDENTITY() as int);";
+                    
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Numero", factura.Numero);
+                        command.Parameters.AddWithValue("@FechaEmision", factura.FechaEmision);
+                        command.Parameters.AddWithValue("@Subtotal", factura.Subtotal);
+                        command.Parameters.AddWithValue("@IVA", factura.IVA);
+                        command.Parameters.AddWithValue("@Total", factura.Total);
+                        command.Parameters.AddWithValue("@Estado", factura.Estado);
+                        command.Parameters.AddWithValue("@IdVenta", factura.IdVenta);
+                        command.Parameters.AddWithValue("@IdCliente", factura.IdCliente);
+                        
+                        var result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out idFactura))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log del error si es necesario
+                System.Diagnostics.Debug.WriteLine($"Error al insertar factura: {ex.Message}");
+            }
+            
+            return false;
+        }
+        
+        public bool InsertPagoSQL(Pago pago)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    
+                    string query = @"
+                        INSERT INTO Pago (Fecha, Monto, Metodo, IdFactura)
+                        VALUES (@Fecha, @Monto, @Metodo, @IdFactura)";
+                    
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Fecha", pago.Fecha);
+                        command.Parameters.AddWithValue("@Monto", pago.Monto);
+                        command.Parameters.AddWithValue("@Metodo", pago.Metodo);
+                        command.Parameters.AddWithValue("@IdFactura", pago.IdFactura);
+                        
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log del error si es necesario
+                System.Diagnostics.Debug.WriteLine($"Error al insertar pago: {ex.Message}");
+            }
+            
+            return false;
         }
 
         public void Dispose()

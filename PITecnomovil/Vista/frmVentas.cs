@@ -728,7 +728,7 @@ namespace PITecnomovil
                 // PASO CRÍTICO: La venta ya está guardada en BD. Lo que sigue es opcional.
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("Intentando crear factura...");
+                    System.Diagnostics.Debug.WriteLine("Intentando crear factura con SQL directo...");
                     // Crear la factura
                     var factura = new Factura
                     {
@@ -747,23 +747,28 @@ namespace PITecnomovil
                         throw new Exception("Los datos de la factura no son válidos.");
                     }
 
-                    // Crear la factura y obtener la factura creada con su ID directamente
-                    facturaCreada = await _facturaService.AddFacturaAsync(factura);
+                    // Usar método SQL directo para insertar la factura
+                    int idFacturaGenerado;
+                    bool facturaInsertada = _facturaService.InsertFacturaSQL(factura, out idFacturaGenerado);
 
-                    if (facturaCreada == null)
+                    if (!facturaInsertada || idFacturaGenerado <= 0)
                     {
-                        throw new Exception("No se pudo crear la factura.");
+                        throw new Exception("No se pudo crear la factura en la base de datos.");
                     }
 
-                    System.Diagnostics.Debug.WriteLine($"Factura creada: {facturaCreada.Numero}");
+                    // Asignar el ID generado
+                    factura.IdFactura = idFacturaGenerado;
+                    facturaCreada = factura;
+                    
+                    System.Diagnostics.Debug.WriteLine($"Factura creada con SQL directo: {facturaCreada.Numero}, ID: {idFacturaGenerado}");
 
-                    // Crear el registro de pago
+                    // Crear el registro de pago usando SQL directo
                     var pago = new Pago
                     {
                         Fecha = DateTime.Now,
                         Monto = total,
                         Metodo = cmbMetodoPago.Text,
-                        IdFactura = facturaCreada.IdFactura
+                        IdFactura = idFacturaGenerado
                     };
 
                     if (!pago.IsValid())
@@ -771,17 +776,23 @@ namespace PITecnomovil
                         throw new Exception("Los datos del pago no son válidos.");
                     }
 
-                    // Crear el pago (no necesitamos guardar la respuesta para este caso)
-                    await _pagoService.AddPagoAsync(pago);
+                    // Usar método SQL directo para insertar el pago
+                    bool pagoInsertado = _facturaService.InsertPagoSQL(pago);
+                    
+                    if (!pagoInsertado)
+                    {
+                        throw new Exception("No se pudo crear el registro de pago en la base de datos.");
+                    }
+                    
                     facturaYPagoCreados = true;
                     mensajeFacturacion = $"Factura: {facturaCreada.Numero}";
-                    System.Diagnostics.Debug.WriteLine("Factura y pago creados exitosamente");
+                    System.Diagnostics.Debug.WriteLine("Factura y pago creados exitosamente con SQL directo");
                 }
                 catch (Exception facturaEx)
                 {
                     // Si falla la facturación, continuar sin ella pero registrar el error
                     System.Diagnostics.Debug.WriteLine($"Error en facturación: {facturaEx.Message}");
-                    mensajeFacturacion = "Advertencia: No se pudo generar la factura (API no disponible)";
+                    mensajeFacturacion = "Advertencia: No se pudo generar la factura";
                     facturaCreada = new Factura 
                     { 
                         Numero = $"FAC-{DateTime.Now:yyyyMMdd}-{idVenta:D6}",

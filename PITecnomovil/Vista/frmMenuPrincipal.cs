@@ -24,9 +24,11 @@ namespace PITecnomovil
             InitializeComponent();
             _rol = rol;
             _idUsuario = idUsuario;
-            
 
 
+            frmHome formulario0 = new frmHome();
+            formulario0.Dock = DockStyle.Fill;
+            materialTabControl1.TabPages[0].Controls.Add(formulario0);
 
             frmProductos formulario1 = new frmProductos();
             formulario1.Dock = DockStyle.Fill;
