@@ -81,6 +81,7 @@ namespace API_RESTful.Controllers
             existingCliente.Nombres = cliente.Nombres;
             existingCliente.Cedula = cliente.Cedula;
             existingCliente.Contacto = cliente.Contacto;
+            existingCliente.Correo = cliente.Correo;
             try
             {
                 _context.SaveChanges();
